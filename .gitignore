@@ -1,0 +1,10 @@
+
+.DS_Store
+Thumbs.db
+/nbproject/private/
+
+/full_dumps
+/config/myconfig.rb
+
+*.bak
+
