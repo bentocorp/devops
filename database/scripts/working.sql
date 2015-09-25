@@ -141,6 +141,22 @@ where
 	AND os.status != 'Cancelled' # And don't count cancelled orders
 ;
 
+# Get tips/sum for a range
+SELECT 
+	sum(o.tip)
+	#o.pk_Order,
+	#o.created_at,
+	#o.amount,
+	#o.tip,
+	#d.firstname, d.lastname, d.email
+FROM bento.`Order` o
+left join OrderStatus os on (os.fk_Order = o.pk_Order)
+left join Driver d on (d.pk_Driver = os.fk_Driver)
+WHERE 
+	o.created_at >= CONVERT_TZ('2015-09-23 00:00:00','America/Los_Angeles','UTC') AND 
+	o.created_at <= CONVERT_TZ('2015-09-23 23:59:59','America/Los_Angeles','UTC')
+	AND os.status != 'Cancelled'
+;
 
 
 # Rollup order counts by day, UTC

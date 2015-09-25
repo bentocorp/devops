@@ -3,7 +3,7 @@
 Thumbs.db
 /nbproject/private/
 
-/full_dumps
+/database/full_dumps
 /config/myconfig.rb
 
 *.bak
