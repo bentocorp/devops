@@ -117,31 +117,33 @@ where t.count >= 2
 # Sales Counting
 # ----------------------------------------------------------------------------------------------------------
 
-# Count Lunch bento boxes by day 
+# Lunch: Count bento boxes by day 
 SELECT count(*)
 FROM bento.CustomerBentoBox cbb
 left join OrderStatus os on (cbb.fk_Order = os.fk_Order) 
 where 
 	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
 	# (local time, local timezone, timezone to convert to)
-	cbb.created_at >= CONVERT_TZ('2015-08-10 10:00:00','America/Los_Angeles','UTC') AND 
-	cbb.created_at <= CONVERT_TZ('2015-08-10 15:59:59','America/Los_Angeles','UTC') 
+	cbb.created_at >= CONVERT_TZ('2015-10-12 10:00:00','America/Los_Angeles','UTC') AND 
+	cbb.created_at <= CONVERT_TZ('2015-10-12 15:59:59','America/Los_Angeles','UTC') 
 	AND os.status != 'Cancelled' # And don't count cancelled orders
 ;
     
-# Count Dinner bento boxes by day 
+# Dinner: Count bento boxes by day 
 SELECT count(*)
 FROM bento.CustomerBentoBox cbb
 left join OrderStatus os on (cbb.fk_Order = os.fk_Order) 
 where 
 	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
 	# (local time, local timezone, timezone to convert to)
-	cbb.created_at >= CONVERT_TZ('2015-08-10 16:00:00','America/Los_Angeles','UTC') AND 
-	cbb.created_at <= CONVERT_TZ('2015-08-10 23:59:59','America/Los_Angeles','UTC') 
+	cbb.created_at >= CONVERT_TZ('2015-10-08 16:00:00','America/Los_Angeles','UTC') AND 
+	cbb.created_at <= CONVERT_TZ('2015-10-08 23:59:59','America/Los_Angeles','UTC') 
 	AND os.status != 'Cancelled' # And don't count cancelled orders
 ;
 
-# Get tips/sum for a range
+# +++
+
+# Lunch: Get tips/sum 
 SELECT 
 	sum(o.tip)
 	#o.pk_Order,
@@ -153,11 +155,27 @@ FROM bento.`Order` o
 left join OrderStatus os on (os.fk_Order = o.pk_Order)
 left join Driver d on (d.pk_Driver = os.fk_Driver)
 WHERE 
-	o.created_at >= CONVERT_TZ('2015-09-23 00:00:00','America/Los_Angeles','UTC') AND 
-	o.created_at <= CONVERT_TZ('2015-09-23 23:59:59','America/Los_Angeles','UTC')
+	o.created_at >= CONVERT_TZ('2015-10-08 10:00:00','America/Los_Angeles','UTC') AND 
+	o.created_at <= CONVERT_TZ('2015-10-08 15:59:59','America/Los_Angeles','UTC')
 	AND os.status != 'Cancelled'
 ;
 
+# Dinner: Get tips/sum 
+SELECT 
+	sum(o.tip)
+	#o.pk_Order,
+	#o.created_at,
+	#o.amount,
+	#o.tip,
+	#d.firstname, d.lastname, d.email
+FROM bento.`Order` o
+left join OrderStatus os on (os.fk_Order = o.pk_Order)
+left join Driver d on (d.pk_Driver = os.fk_Driver)
+WHERE 
+	o.created_at >= CONVERT_TZ('2015-10-08 16:00:00','America/Los_Angeles','UTC') AND 
+	o.created_at <= CONVERT_TZ('2015-10-08 23:59:59','America/Los_Angeles','UTC')
+	AND os.status != 'Cancelled'
+;
 
 # Rollup order counts by day, UTC
 select DATE_FORMAT(created_at, '%Y-%m-%d') as date2, count(*) as `count`
