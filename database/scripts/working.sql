@@ -128,7 +128,21 @@ where
 	cbb.created_at <= CONVERT_TZ('2015-10-12 15:59:59','America/Los_Angeles','UTC') 
 	AND os.status != 'Cancelled' # And don't count cancelled orders
 ;
-    
+
+# Lunch v2: Count items by day
+SELECT item_type, sum(qty) as TotalSold
+FROM bento.OrderItem ois
+left join OrderStatus os on (ois.fk_Order = os.fk_Order) 
+where 
+	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
+	# (local time, local timezone, timezone to convert to)
+	ois.created_at >= CONVERT_TZ('2016-01-05 10:00:00','America/Los_Angeles','UTC') AND 
+	ois.created_at <= CONVERT_TZ('2016-01-05 15:59:59','America/Los_Angeles','UTC') 
+	AND os.status != 'Cancelled' # And don't count cancelled orders
+group by item_type
+;
+
+
 # Dinner: Count bento boxes by day 
 SELECT count(*)
 FROM bento.CustomerBentoBox cbb
@@ -139,6 +153,19 @@ where
 	cbb.created_at >= CONVERT_TZ('2015-10-08 16:00:00','America/Los_Angeles','UTC') AND 
 	cbb.created_at <= CONVERT_TZ('2015-10-08 23:59:59','America/Los_Angeles','UTC') 
 	AND os.status != 'Cancelled' # And don't count cancelled orders
+;
+
+# Dinner v2: Count items by day
+SELECT item_type, sum(qty) as TotalSold
+FROM bento.OrderItem ois
+left join OrderStatus os on (ois.fk_Order = os.fk_Order) 
+where 
+	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
+	# (local time, local timezone, timezone to convert to)
+	ois.created_at >= CONVERT_TZ('2016-01-05 16:00:00','America/Los_Angeles','UTC') AND 
+	ois.created_at <= CONVERT_TZ('2016-01-05 23:59:59','America/Los_Angeles','UTC') 
+	AND os.status != 'Cancelled' # And don't count cancelled orders
+group by item_type
 ;
 
 # +++
